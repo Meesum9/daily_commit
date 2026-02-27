@@ -1,0 +1,27 @@
+
+name: Daily Heartbeat Commit
+
+on:
+  schedule:
+    # 4:00 AM UTC is 9:00 AM in Pakistan (PKT)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update heartbeat file
+        run: |
+          echo "Last heartbeat: $(date)" > heartbeat.txt
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Your GitHub Username"
+          git config --global user.email "your-email@example.com"
+          git add heartbeat.txt
+          git commit -m "Automated daily heartbeat [skip ci]"
+          git push
